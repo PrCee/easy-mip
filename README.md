@@ -25,8 +25,8 @@ Gerador automatizado de documentos MIP (Modelo de Instrução de Procedimento) v
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/[seu-usuario]/mip-generator.git
-cd mip-generator
+git clone https://github.com/PrCee/easy-mip.git
+cd easy-mip
 ```
 
 2. Instale as dependências:
