@@ -1,67 +1,27 @@
-# Gerador Automatizado de MIP via WhatsApp
+# MIP Generator Bot
 
-Sistema para geração automatizada de documentos MIP (Modelo de Instrução de Procedimento) a partir de áudios e imagens enviados via WhatsApp. O sistema suporta tanto prints de tela quanto fotos tiradas pelo celular.
+Gerador automatizado de documentos MIP (Modelo de Instrução de Procedimento) via Telegram.
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
-- Recebimento de áudios e imagens via WhatsApp
-- Suporte a prints de tela e fotos do celular
-- Processamento e otimização automática de imagens
-- Transcrição automática de áudio usando Whisper
-- Processamento e organização do conteúdo em formato MIP
-- Geração de PDF com formatação padronizada
-- Envio do documento final via WhatsApp
+- Geração de MIPs a partir de:
+  - Mensagens de texto
+  - Mensagens de áudio (transcrição automática)
+  - Imagens
+- Formatação padronizada com:
+  - Logo da empresa
+  - Cabeçalho na primeira página
+  - Rodapé na última página com QR code
+- Interface amigável via bot do Telegram
 
-## 📋 Modos de Operação
+## Requisitos
 
-### 1. Modo Sequencial (Padrão)
-1. Analista envia o áudio com as instruções
-2. Sistema transcreve e identifica os passos
-3. Sistema solicita as imagens na ordem
-4. Analista envia cada imagem correspondente a cada passo
-5. Sistema gera o PDF quando receber todas as imagens
-
-### 2. Modo Batch
-1. Analista envia "iniciar batch" para começar
-2. Sistema entra no modo batch
-3. Analista envia todas as imagens na ordem correta
-4. Analista envia "pronto" quando terminar
-5. Analista envia o áudio explicando o passo a passo
-6. Sistema gera o PDF automaticamente
-
-## 🖼️ Suporte a Imagens
-
-### Formatos Suportados
-- JPG/JPEG
-- PNG
-- HEIC/HEIF (formato comum em iPhones)
-
-### Processamento Automático
-
-#### Screenshots (Prints de Tela)
-- Detecção automática de prints
-- Ajuste de contraste e nitidez para melhor legibilidade
-- Otimização de tamanho mantendo qualidade
-
-#### Fotos do Celular
-- Correção automática de orientação (EXIF)
-- Redimensionamento proporcional
-- Otimização para visualização no documento
-
-#### Otimizações Gerais
-- Redimensionamento inteligente (máx. 1200x800 pixels)
-- Compressão otimizada (85% qualidade)
-- Conversão para formato uniforme (JPEG)
-- Remoção de transparência em PNGs
-
-## ⚙️ Requisitos
-
-- Python 3.8 ou superior
-- Conta no Twilio com WhatsApp habilitado
+- Python 3.8+
 - FFmpeg (para processamento de áudio)
-- Pillow (para processamento de imagens)
+- Conta no Telegram
+- Bot do Telegram (token)
 
-## 📦 Instalação
+## Instalação
 
 1. Clone o repositório:
 ```bash
@@ -75,84 +35,67 @@ pip install -r requirements.txt
 ```
 
 3. Configure as variáveis de ambiente:
-Crie um arquivo `.env` na raiz do projeto com:
-```env
-# Configurações do Twilio
-TWILIO_ACCOUNT_SID=seu_account_sid
-TWILIO_AUTH_TOKEN=seu_auth_token
-TWILIO_PHONE_NUMBER=seu_numero_whatsapp
-
-# Configurações do OpenAI (caso necessário para versão em nuvem do Whisper)
-OPENAI_API_KEY=sua_chave_api
-
-# Configurações do sistema
-UPLOAD_FOLDER=uploads
-OUTPUT_FOLDER=output
-SESSION_TIMEOUT=120
-```
+   - Copie o arquivo `.env.example` para `.env`
+   - Preencha as variáveis necessárias:
+     - `TELEGRAM_TOKEN`: Token do seu bot do Telegram
+     - `OPENAI_API_KEY`: (Opcional) Chave da API da OpenAI para transcrição de áudio
+     - `UPLOAD_FOLDER`: Pasta para arquivos temporários
+     - `OUTPUT_FOLDER`: Pasta para os PDFs gerados
 
 4. Crie as pastas necessárias:
 ```bash
-mkdir uploads output assets
+mkdir uploads output
 ```
 
-5. Adicione seu logo:
-- Coloque o arquivo do logo da empresa em `assets/logo.png`
+## Criando um Bot no Telegram
 
-## 🚀 Uso
+1. Abra o Telegram e procure por "@BotFather"
+2. Envie o comando `/newbot`
+3. Siga as instruções para criar seu bot
+4. Copie o token fornecido e adicione ao seu arquivo `.env`
 
-1. Inicie o servidor:
+## Uso
+
+1. Inicie o bot:
 ```bash
-python main.py
+python telegram_bot.py
 ```
 
-2. Configure o webhook do Twilio:
-```
-[SEU_DOMINIO]/webhook/whatsapp
-```
+2. No Telegram:
+   - Procure pelo seu bot usando o nome que você definiu
+   - Inicie uma conversa com `/start`
+   - Use `/novo` para começar um novo MIP
+   - Envie textos, áudios ou imagens
+   - Use `/finalizar` quando terminar
 
-3. Envie mensagens para o número do WhatsApp configurado:
-   - Escolha o modo (sequencial ou batch)
-   - Envie as imagens (prints ou fotos)
-   - Envie o áudio com as instruções
-   - Receba o documento MIP em PDF
+## Comandos do Bot
 
-## 📁 Estrutura do Projeto
+- `/start` - Inicia a interação com o bot
+- `/novo` - Começa um novo documento MIP
+- `/ajuda` - Mostra a lista de comandos
+- `/finalizar` - Gera o PDF do MIP
+- `/cancelar` - Cancela o MIP atual
+
+## Estrutura do Projeto
 
 ```
 mip-generator/
-├── main.py                 # Arquivo principal com API FastAPI
-├── whatsapp_handler.py     # Gerenciamento do WhatsApp
-├── image_processor.py      # Processamento de imagens
-├── document_template.py    # Template do documento
-├── requirements.txt        # Dependências
-├── .env                    # Configurações
-├── assets/                 # Recursos (logo, etc)
-├── uploads/               # Arquivos temporários
-└── output/                # Documentos gerados
+├── assets/
+│   └── logo.png
+├── uploads/          # Arquivos temporários
+├── output/           # PDFs gerados
+├── document_template.py
+├── telegram_bot.py
+├── requirements.txt
+└── .env
 ```
 
-## ⚠️ Limitações Atuais
-
-- Não suporta edição interativa de documentos
-- Sessão expira após 2 minutos de inatividade
-- Imagens são associadas aos passos na ordem de envio
-- Necessário enviar imagens na ordem correta no modo batch
-
-## 🤝 Contribuição
-
-1. Faça um Fork do projeto
-2. Crie sua Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a Branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📄 Licença
+## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## 📧 Contato
+## Contato
 
 Seu Nome - [@seu_twitter](https://twitter.com/seu_twitter) - email@exemplo.com
 
-Link do projeto: [https://github.com/seu-usuario/mip-generator](https://github.com/seu-usuario/mip-generator) 
+Link do projeto: [https://github.com/seu-usuario/mip-generator](https://github.com/seu-usuario/mip-generator)
