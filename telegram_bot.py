@@ -4,9 +4,8 @@ from telegram.ext import Application, CommandHandler, MessageHandler, ContextTyp
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-from document_template import MIPDocTemplate
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph, Spacer, NextPageTemplate
+from docx import Document
+from docx.shared import Inches
 
 # Configurar logging
 logging.basicConfig(

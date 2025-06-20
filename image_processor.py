@@ -11,6 +11,14 @@ class ImageProcessor:
         self.max_height = 800  # Altura máxima para prints de tela
         self.quality = 85  # Qualidade da compressão JPEG
         self.supported_formats = ['.jpg', '.jpeg', '.png', '.heic', '.heif']
+        self.active_sessions = {}
+
+    def start_session(self, user_id):
+        self.active_sessions[user_id] = {
+            'title': None,
+            'items': [],  # lista do tipo {'tipo':'imagem'|'audio'|'texto', 'path':..., 'transcricao':...}
+            'waiting_for': 'title'  # controle de qual passo o usuário está
+        }
     
     def process_image(self, input_path, output_path=None):
         """
